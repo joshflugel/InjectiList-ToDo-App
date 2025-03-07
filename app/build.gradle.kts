@@ -59,6 +59,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Dagger Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // LiveData
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.compose.livedata)
 }
