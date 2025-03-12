@@ -1,9 +1,11 @@
-plugins {
+ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.gradle)
-    alias(libs.plugins.kotlin.kapt)
+
+     id("com.google.devtools.ksp") version "2.1.10-1.0.30"
+     alias(libs.plugins.hilt.gradle)
+     alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -29,6 +31,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -38,6 +41,11 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    room { schemaDirectory("schemas") }
+    hilt {
+        enableAggregatingTask = false
     }
 }
 
@@ -59,11 +67,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Dagger Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-
     // LiveData
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.compose.livedata)
+
+    // Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }
