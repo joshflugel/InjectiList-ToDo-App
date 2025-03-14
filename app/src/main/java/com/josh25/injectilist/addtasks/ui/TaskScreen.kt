@@ -95,7 +95,7 @@ fun ItemTask(taskModel: TaskModel, taskViewModel: TasksViewModel) {
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onLongPress = { taskViewModel.onItemRemoved(taskModel) })
+                    onLongPress = { taskViewModel.onItemDeleted(taskModel) })
             },
         elevation = CardDefaults.cardElevation(8.dp)
     ) {

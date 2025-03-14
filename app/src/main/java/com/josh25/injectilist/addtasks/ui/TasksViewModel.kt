@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.josh25.injectilist.addtasks.domain.AddTaskUseCase
+import com.josh25.injectilist.addtasks.domain.DeleteTaskUseCase
 import com.josh25.injectilist.addtasks.domain.GetTasksUseCase
+import com.josh25.injectilist.addtasks.domain.UpdateTaskUseCase
 import com.josh25.injectilist.ui.TaskUiState
 import com.josh25.injectilist.ui.TaskUiState.Success
 import com.josh25.injectilist.ui.model.TaskModel
@@ -23,7 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val addTaskUseCase: AddTaskUseCase,
-    getTasksUseCase: GetTasksUseCase
+    getTasksUseCase: GetTasksUseCase,
+    private val updateTaskUseCase: UpdateTaskUseCase, // 150)
+    private val deleteTaskUseCase: DeleteTaskUseCase // 152
 ): ViewModel() {
 
     // 149) StateFlow
@@ -34,9 +38,6 @@ class TasksViewModel @Inject constructor(
 
     private val _showDialog = MutableLiveData<Boolean>()
     val showdialog:LiveData<Boolean> = _showDialog
-
- //   private val _tasks = mutableStateListOf<TaskModel>()
- //   val tasks: List<TaskModel> = _tasks
 
     fun onDialogClose() {
         _showDialog.value = false
@@ -55,21 +56,16 @@ class TasksViewModel @Inject constructor(
         _showDialog.value = true
     }
 
-    fun onCheckBoxSelected(taskModel: TaskModel) {
-        /*
-        val index = _tasks.indexOf(taskModel)
-        _tasks[index] = _tasks[index].let {
-            it.copy(selected = !it.selected) // .copy triggers recompo
+    fun onCheckBoxSelected(taskModel: TaskModel) { // 150
+        viewModelScope.launch {
+            updateTaskUseCase(taskModel.copy(selected = !taskModel.selected))
         }
-
-         */
     }
 
-    fun onItemRemoved(taskModel: TaskModel) {
-        /*
-        val task = _tasks.find {it.id == taskModel.id}
-        _tasks.remove(task)
-         */
+    fun onItemDeleted(taskModel: TaskModel) { // 152
+        viewModelScope.launch {
+            deleteTaskUseCase(taskModel)
+        }
     }
 
 }
